@@ -33,13 +33,13 @@ function update() {
   if (!isPaused) {
     track.update();
 
-    if (btnp("a")) {
+    if (btnp("a") || btnp("ArrowLeft")) {
       if (track.playerPos > 0) {
         track.playerPos -= 1;
       }
     }
 
-    if (btnp("d")) {
+    if (btnp("d") || btnp("ArrowRight")) {
       if (track.playerPos < block_count - 1) {
         track.playerPos += 1;
       }
