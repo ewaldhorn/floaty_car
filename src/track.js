@@ -60,6 +60,41 @@ export class Track {
   }
 
   // --------------------------------------------------------------------------
+  manageGameSpeed() {
+    if (this.score > 50) {
+      update_cycle_target = 15;
+    }
+    if (this.score > 150) {
+      update_cycle_target = 12;
+    }
+    if (this.score > 350) {
+      update_cycle_target = 9;
+    }
+    if (this.score > 500) {
+      update_cycle_target = 4;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  adjustRoadSizeAndPosition() {
+    if (isRandomTrue()) {
+      if (this.roadWidth < 6) {
+        this.roadWidth += 1;
+      } else if (this.roadWidth > 3) {
+        this.roadWidth -= 1;
+      }
+    }
+
+    if (isRandomTrue()) {
+      if (isRandomTrue() && this.roadPos > 2) {
+        this.roadPos -= 1;
+      } else if (this.roadPos < block_count - this.roadWidth) {
+        this.roadPos += 1;
+      }
+    }
+  }
+
+  // --------------------------------------------------------------------------
   // create a new array of rows, add one to the top and then copy the rest over,
   // moving them down by one
   update() {
@@ -68,19 +103,7 @@ export class Track {
     if (this.updateCycle >= update_cycle_target) {
       this.updateCycle = 0;
 
-      if (this.score > 50) {
-        update_cycle_target = 15;
-      }
-      if (this.score > 150) {
-        update_cycle_target = 12;
-      }
-      if (this.score > 350) {
-        update_cycle_target = 9;
-      }
-      if (this.score > 500) {
-        update_cycle_target = 4;
-      }
-
+      this.manageGameSpeed();
       this.checkCrash();
 
       if (!this.hasCrashed) {
@@ -97,21 +120,7 @@ export class Track {
           ),
         );
 
-        if (isRandomTrue()) {
-          if (this.roadWidth < 6) {
-            this.roadWidth += 1;
-          } else if (this.roadWidth > 3) {
-            this.roadWidth -= 1;
-          }
-        }
-
-        if (isRandomTrue()) {
-          if (isRandomTrue() && this.roadPos > 2) {
-            this.roadPos -= 1;
-          } else if (this.roadPos < block_count - this.roadWidth) {
-            this.roadPos += 1;
-          }
-        }
+        this.adjustRoadSizeAndPosition();
 
         tmp[0].blocks.fill(0, this.roadPos, this.roadPos + this.roadWidth);
 
