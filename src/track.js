@@ -2,7 +2,8 @@ import { isRandomTrue, randomBetween } from "./utils";
 
 // ----------------------------------------------------------------------------
 const block_size = 8;
-const block_count = 128 / block_size;
+export const block_count = 128 / block_size;
+const update_cycle_target = 20;
 
 // ----------------------------------------------------------------------------
 //                                                                        TRACK
@@ -11,6 +12,7 @@ export class Track {
   updateCycle = 0;
   roadWidth = 6;
   roadPos = 5;
+  playerPos = Math.floor(block_count / 2);
 
   // --------------------------------------------------------------------------
   init() {
@@ -42,7 +44,7 @@ export class Track {
   update() {
     this.updateCycle += 1;
 
-    if (this.updateCycle >= 25) {
+    if (this.updateCycle >= update_cycle_target) {
       this.updateCycle = 0;
       let tmp = [];
 
@@ -115,6 +117,11 @@ export class Track {
         }
       }
     }
+
+    // draw player
+    let xpos = this.playerPos * block_size;
+    let ypos = (this.rows - 1) * block_size;
+    rectFill(xpos, ypos, xpos + block_size, ypos + block_size, 7);
   }
 }
 

@@ -1,5 +1,5 @@
 import { Engine } from "https://floaty.dev/engine-v1.js";
-import { Track } from "./track";
+import { block_count, Track } from "./track";
 
 // ----------------------------------------------------------------------------
 //                                                            START YOUR ENGINE
@@ -32,6 +32,18 @@ async function init() {
 function update() {
   if (!isPaused) {
     track.update();
+
+    if (btnp("a")) {
+      if (track.playerPos > 0) {
+        track.playerPos -= 1;
+      }
+    }
+
+    if (btnp("d")) {
+      if (track.playerPos < block_count - 1) {
+        track.playerPos += 1;
+      }
+    }
   }
 }
 
