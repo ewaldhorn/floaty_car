@@ -18,19 +18,19 @@ body {
 .gradient-header {
   background: -webkit-linear-gradient(
     to right,
-    #773d44,
-    #c6e4c6,
-    #773d44,
-    #c6e4c6,
-    #773d44
+    #223d44,
+    #56e456,
+    #223d44,
+    #56e456,
+    #223d44
   );
   background: linear-gradient(
     to right,
-    #773d44,
-    #c6e4c6,
-    #773d44,
-    #c6e4c6,
-    #773d44
+    #223d44,
+    #56e456,
+    #223d44,
+    #56e456,
+    #223d44
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -44,8 +44,8 @@ body {
   height: 100vh;
 }
 
-.game {
-  border: 1px solid #202020;
+.thecar {
+  border: 1px solid #171717;
   width: 400px;
   height: 400px;
 }
