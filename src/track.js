@@ -145,11 +145,11 @@ export class Track {
             break;
           case 3:
             rectFill(xpos, ypos, xpos + block_size, ypos + block_size, 3);
-            pset(xpos + 7, ypos + 2, 14);
+            pset(xpos + 5, ypos + 2, 14);
             break;
           case 4:
             rectFill(xpos, ypos, xpos + block_size, ypos + block_size, 3);
-            pset(xpos + 7, ypos + 7, 11);
+            pset(xpos + 5, ypos + 6, 11);
             break;
           case 5:
             rectFill(xpos, ypos, xpos + block_size, ypos + block_size, 3);
