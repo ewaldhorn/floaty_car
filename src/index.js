@@ -33,15 +33,19 @@ function update() {
   if (!isPaused) {
     track.update();
 
-    if (btnp("a") || btnp("ArrowLeft")) {
-      if (track.playerPos > 0) {
-        track.playerPos -= 1;
+    if (!track.hasCrashed) {
+      if (btnp("a") || btnp("ArrowLeft")) {
+        if (track.playerPos > 0) {
+          track.playerPos -= 1;
+          track.checkCrash();
+        }
       }
-    }
 
-    if (btnp("d") || btnp("ArrowRight")) {
-      if (track.playerPos < block_count - 1) {
-        track.playerPos += 1;
+      if (btnp("d") || btnp("ArrowRight")) {
+        if (track.playerPos < block_count - 1) {
+          track.playerPos += 1;
+          track.checkCrash();
+        }
       }
     }
   }
@@ -52,6 +56,8 @@ function update() {
 function draw() {
   if (isPaused) {
     // show Pause message
+    rectFill(30, 55, 100, 65, 1);
+    text("PAUSED", 50, 55, 9);
   } else {
     cls();
     track.draw();
@@ -60,6 +66,19 @@ function draw() {
   // Toggle pause on or off
   if (btnp("p")) {
     isPaused = !isPaused;
+  }
+
+  if (isPaused) {
+    if (btnp("a") || btnp("d") || btnp("ArrowLeft") || btnp("ArrowRight")) {
+      isPaused = false;
+    }
+  }
+
+  if (track.hasCrashed) {
+    if (btnp("r")) {
+      isPaused = false;
+      track.newGame();
+    }
   }
 }
 

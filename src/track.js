@@ -3,7 +3,7 @@ import { isRandomTrue, randomBetween } from "./utils";
 // ----------------------------------------------------------------------------
 const block_size = 8;
 export const block_count = 128 / block_size;
-const update_cycle_target = 20;
+let update_cycle_target = 20;
 
 // ----------------------------------------------------------------------------
 //                                                                        TRACK
@@ -13,9 +13,23 @@ export class Track {
   roadWidth = 6;
   roadPos = 5;
   playerPos = Math.floor(block_count / 2);
+  score = 0;
+  hasCrashed = false;
 
   // --------------------------------------------------------------------------
   init() {
+    this.newGame();
+  }
+
+  // --------------------------------------------------------------------------
+  newGame() {
+    this.updateCycle = 0;
+    this.roadWidth = 6;
+    this.roadPos = 5;
+    this.playerPos = Math.floor(block_count / 2);
+    this.score = 0;
+    this.hasCrashed = false;
+
     this.roadSections = Array(this.rows)
       .fill()
       .map(() => {
@@ -39,6 +53,13 @@ export class Track {
   }
 
   // --------------------------------------------------------------------------
+  checkCrash() {
+    if (this.roadSections[this.rows - 1].blocks[this.playerPos] != 0) {
+      this.hasCrashed = true;
+    }
+  }
+
+  // --------------------------------------------------------------------------
   // create a new array of rows, add one to the top and then copy the rest over,
   // moving them down by one
   update() {
@@ -46,41 +67,62 @@ export class Track {
 
     if (this.updateCycle >= update_cycle_target) {
       this.updateCycle = 0;
-      let tmp = [];
 
-      tmp.push(
-        new RoadSection(
-          Array(this.rows)
-            .fill(0)
-            .map(() => {
-              return randomBetween(1, 5);
-            }),
-        ),
-      );
+      if (this.score > 50) {
+        update_cycle_target = 15;
+      }
+      if (this.score > 150) {
+        update_cycle_target = 12;
+      }
+      if (this.score > 350) {
+        update_cycle_target = 9;
+      }
+      if (this.score > 500) {
+        update_cycle_target = 4;
+      }
 
-      if (isRandomTrue()) {
-        if (this.roadWidth < 6) {
-          this.roadWidth += 1;
-        } else if (this.roadWidth > 3) {
-          this.roadWidth -= 1;
+      this.checkCrash();
+
+      if (!this.hasCrashed) {
+        this.score += 1;
+        let tmp = [];
+
+        tmp.push(
+          new RoadSection(
+            Array(this.rows)
+              .fill(0)
+              .map(() => {
+                return randomBetween(1, 5);
+              }),
+          ),
+        );
+
+        if (isRandomTrue()) {
+          if (this.roadWidth < 6) {
+            this.roadWidth += 1;
+          } else if (this.roadWidth > 3) {
+            this.roadWidth -= 1;
+          }
         }
-      }
 
-      if (isRandomTrue()) {
-        if (isRandomTrue() && this.roadPos > 2) {
-          this.roadPos -= 1;
-        } else if (this.roadPos < block_count - this.roadWidth) {
-          this.roadPos += 1;
+        if (isRandomTrue()) {
+          if (isRandomTrue() && this.roadPos > 2) {
+            this.roadPos -= 1;
+          } else if (this.roadPos < block_count - this.roadWidth) {
+            this.roadPos += 1;
+          }
         }
+
+        tmp[0].blocks.fill(0, this.roadPos, this.roadPos + this.roadWidth);
+
+        for (let i = 0; i < this.rows - 1; i++) {
+          tmp.push(this.roadSections[i]);
+        }
+
+        this.roadSections = tmp;
       }
 
-      tmp[0].blocks.fill(0, this.roadPos, this.roadPos + this.roadWidth);
-
-      for (let i = 0; i < this.rows - 1; i++) {
-        tmp.push(this.roadSections[i]);
-      }
-
-      this.roadSections = tmp;
+      this.checkCrash();
     }
   }
 
@@ -121,7 +163,20 @@ export class Track {
     // draw player
     let xpos = this.playerPos * block_size;
     let ypos = (this.rows - 1) * block_size;
-    rectFill(xpos, ypos, xpos + block_size, ypos + block_size, 7);
+    if (this.hasCrashed) {
+      rectFill(xpos, ypos, xpos + block_size, ypos + block_size, 8);
+    } else {
+      rectFill(xpos, ypos, xpos + block_size, ypos + block_size, 7);
+    }
+
+    // render score
+    text(`Score: ${this.score}`, 1, 1, 15);
+
+    if (this.hasCrashed) {
+      rectFill(30, 55, 100, 76, 7);
+      text("CRASHED!", 46, 55, 8);
+      text("(R)estart?", 46, 65, 8);
+    }
   }
 }
 
