@@ -57,25 +57,17 @@ export class Track {
       );
 
       if (isRandomTrue()) {
-        if (isRandomTrue()) {
-          if (this.roadWidth < 6) {
-            this.roadWidth += 1;
-          } else if (this.roadWidth > 3) {
-            this.roadWidth -= 1;
-          }
+        if (this.roadWidth < 6) {
+          this.roadWidth += 1;
+        } else if (this.roadWidth > 3) {
+          this.roadWidth -= 1;
         }
       }
 
       if (isRandomTrue()) {
-        if (this.roadPos > 2) {
-          if (isRandomTrue()) {
-            this.roadPos -= 1;
-          }
+        if (isRandomTrue() && this.roadPos > 2) {
+          this.roadPos -= 1;
         } else if (this.roadPos < block_count - this.roadWidth) {
-          this.roadPos += 1;
-        }
-      } else {
-        if (this.roadPos < block_count - this.roadWidth) {
           this.roadPos += 1;
         }
       }
