@@ -1,4 +1,4 @@
-import { randomBetween } from "./utils";
+import { isRandomTrue, randomBetween } from "./utils";
 
 // ----------------------------------------------------------------------------
 const block_size = 8;
@@ -8,10 +8,13 @@ const block_count = 128 / block_size;
 //                                                                        TRACK
 export class Track {
   rows = 128 / block_size;
+  updateCycle = 0;
+  roadWidth = 6;
+  roadPos = 5;
 
   // --------------------------------------------------------------------------
   init() {
-    this.points = Array(this.rows)
+    this.roadSections = Array(this.rows)
       .fill()
       .map(() => {
         return new RoadSection(
@@ -23,14 +26,69 @@ export class Track {
         );
       });
 
-    // for debugging, add a road to the top
-    this.points[0].blocks = [1, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 3, 1, 1, 5];
+    // now draw the initial road sections
+    for (let i = 0; i < this.rows; i++) {
+      this.roadSections[i].blocks.fill(
+        0,
+        this.roadPos,
+        this.roadPos + this.roadWidth,
+      );
+    }
   }
 
   // --------------------------------------------------------------------------
   // create a new array of rows, add one to the top and then copy the rest over,
   // moving them down by one
-  update() {}
+  update() {
+    this.updateCycle += 1;
+
+    if (this.updateCycle >= 25) {
+      this.updateCycle = 0;
+      let tmp = [];
+
+      tmp.push(
+        new RoadSection(
+          Array(this.rows)
+            .fill(0)
+            .map(() => {
+              return randomBetween(1, 5);
+            }),
+        ),
+      );
+
+      if (isRandomTrue()) {
+        if (isRandomTrue()) {
+          if (this.roadWidth < 6) {
+            this.roadWidth += 1;
+          } else if (this.roadWidth > 3) {
+            this.roadWidth -= 1;
+          }
+        }
+      }
+
+      if (isRandomTrue()) {
+        if (this.roadPos > 2) {
+          if (isRandomTrue()) {
+            this.roadPos -= 1;
+          }
+        } else if (this.roadPos < block_count - this.roadWidth) {
+          this.roadPos += 1;
+        }
+      } else {
+        if (this.roadPos < block_count - this.roadWidth) {
+          this.roadPos += 1;
+        }
+      }
+
+      tmp[0].blocks.fill(0, this.roadPos, this.roadPos + this.roadWidth);
+
+      for (let i = 0; i < this.rows - 1; i++) {
+        tmp.push(this.roadSections[i]);
+      }
+
+      this.roadSections = tmp;
+    }
+  }
 
   // --------------------------------------------------------------------------
   draw() {
@@ -39,9 +97,7 @@ export class Track {
         let xpos = x * block_size;
         let ypos = y * block_size;
 
-        console.log(this.points[y]);
-
-        switch (this.points[y].blocks[x]) {
+        switch (this.roadSections[y].blocks[x]) {
           case 0:
             rectFill(xpos, ypos, xpos + block_size, ypos + block_size, 0);
             break;
