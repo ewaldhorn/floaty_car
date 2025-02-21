@@ -1,5 +1,5 @@
 import { Engine } from "https://floaty.dev/engine-v1.js";
-import { block_count, Track } from "./track";
+import { block_count, speed_factor, Track } from "./track";
 
 // ----------------------------------------------------------------------------
 //                                                            START YOUR ENGINE
@@ -46,6 +46,10 @@ function update() {
           track.playerPos += 1;
           track.checkCrash();
         }
+      }
+
+      if (btnp("w") || btnp("ArrowUp")) {
+        track.score += speed_factor;
       }
     }
   }

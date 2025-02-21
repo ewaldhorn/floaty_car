@@ -3,6 +3,7 @@ import { isRandomTrue, randomBetween } from "./utils";
 // ----------------------------------------------------------------------------
 const block_size = 8;
 export const block_count = 128 / block_size;
+export const speed_factor = 35;
 let update_cycle_target = 25;
 
 // ----------------------------------------------------------------------------
@@ -61,7 +62,10 @@ export class Track {
 
   // --------------------------------------------------------------------------
   manageGameSpeed() {
-    update_cycle_target = Math.max(4, Math.ceil(20 - this.score / 35));
+    update_cycle_target = Math.max(
+      2,
+      Math.ceil(20 - this.score / speed_factor),
+    );
   }
 
   // --------------------------------------------------------------------------
