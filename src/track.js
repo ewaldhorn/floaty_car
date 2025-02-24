@@ -3,7 +3,7 @@ import { isRandomTrue, randomBetween } from "./utils";
 // ----------------------------------------------------------------------------
 const block_size = 8;
 export const block_count = 128 / block_size;
-export const speed_factor = 35;
+export const speed_factor = 45;
 let update_cycle_target = 25;
 
 // ----------------------------------------------------------------------------
