@@ -4,7 +4,7 @@
  * @returns {boolean} - Returns true or false with equal probability
  */
 export const isRandomTrue = () => {
-  return Math.random() > 0.5;
+  return Math.round(Math.random()) === 1;
 };
 
 // ----------------------------------------------------------------------------
@@ -15,5 +15,8 @@ export const isRandomTrue = () => {
  * @returns {number} - A random integer between start and end
  */
 export const randomBetween = (start, end) => {
-  return start + Math.floor(Math.random() * (end - start + 1));
+  const min = Math.min(start, end);
+  const max = Math.max(start, end);
+
+  return min + Math.floor(Math.random() * (max - min + 1));
 };
